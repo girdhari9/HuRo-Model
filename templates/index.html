@@ -1,0 +1,42 @@
+{% extends "layout.html" %} {% block header %}
+<title>{{ websiteName }} | Home</title>
+<meta name="description" content="{{ websiteDesc }}">
+{% endblock %} {% block content %}
+<div class="posts-section">
+	{% for x in posts %}
+	<div class="new-content" style="max-width:1400px">
+		<div class="new-row">
+			<div class="new-col l12 s12">
+		        <div class="new-card-4 new-margin new-white">
+				    <div class="new-container">
+					  <h3 align="center">
+						{% if x.poststatus == 1 %}
+						<i class="fa fa-check-circle" style="color:#008000;" aria-hidden="true"></i>
+						{% elif x.poststatus == -1 %}
+						<i class="fa fa-times-circle-o" style="color:#FF0000;" aria-hidden="false"></i>
+						{% endif %}
+						<b>{{ x.posttitle }}</b>
+					  </h3>
+					  <h5 align="center"><i class="fa fa-user"></i> {{ x.authorname }} - 
+						<span class="new-opacity"><i class="fa fa-calendar"></i> {{ x.postdate }}</span>
+					  </h5>
+				    </div>
+				    <div class="new-container">
+				      <p>{{ x.postcontent|truncate(500)|safe }}</p>
+				      <div class="new-row">
+				        <div class="new-col m12 s12" style="padding-bottom: 10px">
+				          <p align="right"><a class="new-button new-padding-large new-white new-border" href="{{ url_for('show_index') }}post/{{ x.posturl }}">READ MORE »</a></p>
+				        </div>
+				      </div>
+				    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% else %}
+		<h2><i class="fa fa-star fa-4x" aria-hidden="true"></i>
+</h2>
+		<h2>Yahoooo! Your website is ready to go! Start by adding a new post or page from the "New Content" page you'd see in bottom after you login.</h2>
+	{% endfor %}
+</div>
+{% endblock %}

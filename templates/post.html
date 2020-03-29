@@ -1,0 +1,169 @@
+{% extends "layout.html" %} {% block header %}
+<title>{{ post[1] }} - {{ websiteName }}</title>
+<!-- @author : Giridhari -->
+<meta name="description" content="{{ post[3] }}">
+<script>
+function checkIfSure () {
+var sure = confirm("Are you sure you want to delete the post?");
+if (sure == true) {
+    window.location.assign("{{ url_for('postdelete', posturl=post[2]) }}");
+}}
+
+function loginWarning () {
+var sure = confirm("Please login to vote/comment for the post");
+if (sure == true) {
+    window.location.assign("{{ url_for('login')}}");
+}}
+</script>
+<script type="text/javascript">
+  function extractComment(value){
+    if(value == "0"){
+      loginWarning();
+    }
+    else{
+      var comment = $('#comment').val();
+      comment = comment.replace(/(<([^>]+)>)/ig,"")
+      $.ajax({
+        url:'/submit.comment/{{ post[2] }}',
+        method: 'POST',
+        data: { comment:comment },
+        success: function (result) {
+          var today = new Date();
+          var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+          var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+          var dateTime = date+' '+time;
+          var content = '<p> \
+                          <div style=\"float: left;\"> \
+                            <b> \
+                                <i class="fa fa-user"></i> '+result+' \
+                            </b> : '+comment+' \
+                          </div> \
+                          <p align=\"right\"><i class=\"fa fa-calendar\"> '+ dateTime +'</i></p> \
+                        </p>'
+          var res = document.getElementById("totalCmt").textContent;
+          document.getElementById("totalCmt").innerHTML = '<b><i class="fa fa-comments"></i>&nbsp;'+ (parseInt(res) + 1)+' Comments</b>';
+          
+          $('#noComment').empty();
+          $('#commetnDiv').append(content);
+          document.getElementById("comment").value = '';
+        }  
+      });
+    }
+  }
+
+  function extractLikes(votes, userid){
+    if (userid == 0){
+      loginWarning();
+    }
+    else{
+      var totalLikes = $('#like').text();
+      totalLikes = totalLikes.replace(/(<([^>]+)>)/ig,"")
+      var totalDislikes = $('#dislike').text();
+      totalDislikes = totalDislikes.replace(/(<([^>]+)>)/ig,"")
+      $.ajax({
+        url:'/submit.votes/{{ post[2] }}',
+        method: 'POST',
+        data:{'vote': votes},
+        success: function (result) {
+          console.log(result['likes'])
+          console.log(result['dislikes'])
+          if (result=="0") {
+            document.getElementById("like").innerHTML = totalLikes;
+            document.getElementById("dislike").innerHTML = totalDislikes;
+          }
+          else{
+            document.getElementById("like").innerHTML = parseInt(result['likes']);
+            document.getElementById("dislike").innerHTML = parseInt(result['dislikes']);
+          }
+        }  
+      });
+    }
+  }
+</script>
+
+{% endblock %}
+
+{% block content %}
+<div class="new-content" style="max-width:1400px">
+    <div class="new-row">
+      <div class="new-col l12 s12">
+        <div class="new-card-4 new-margin new-white">
+            <div class="new-container">
+              <h3 align="center">
+                {% if post[6] == 1 %}
+                <i class="fa fa-check-circle" style="color:#008000;" aria-hidden="true"></i>
+                {% elif post[6]== -1 %}
+                <i class="fa fa-times-circle-o" style="color:#FF0000;" aria-hidden="false"></i>
+                {% endif %}
+                <b>{{ post[1] }}</b>
+              </h3>
+              <h5 align="center"><b><i class="fa fa-user"></i> </b>{{ user[0] }} - <span class="new-opacity"><b><i class="fa fa-calendar"></i></b> {{ post[7] }}</span></h5>
+            </div>
+            <div class="new-container">
+              <p>{{ post[3]|safe }}</p>
+              <div class="new-row">
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="post-footer">
+  <p>
+     {% if session.logged_in and session['userid'] == post[4]|int %}
+       <a class="button" href="{{ url_for('postedit', posturl=post[2]) }}"><i class="fa fa-edit"></i> Edit</a>
+        -
+        <a class="button" onclick="checkIfSure()"><i class="fa fa-times"></i> Delete</a>
+     {% endif %}</p>
+</div>
+<div>
+  <p id="totalCmt"><b><i class="fa fa-comments"></i> {{ comment|length }} Comments</b></p>
+  <p>
+    {% if session.logged_in %}
+      <button type=submit onclick="extractLikes(1, 1)" class="social-like">Like
+        <span class="likes" name="like" id="like">{{votes[0]}}</span>
+      </button> 
+      <button type=submit onclick="extractLikes(0, 1)" class="social-dislike">Dislike
+        <span class="likes" name="dislike" id="dislike">{{ votes[1] }}</span>
+      </button> 
+      {% else %}
+      <button type=submit onclick="extractLikes(1, 0)" class="social-like">Like
+        <span class="likes" name="like" id="like">{{votes[0]}}</span>
+      </button> 
+      <button type=submit onclick="extractLikes(0, 0)" class="social-dislike">Dislike
+        <span class="likes" name="dislike" id="dislike">{{votes[1]}}</span>
+      </button> 
+      {% endif %}
+  </p>
+  <hr>
+  <div id="commetnDiv">
+    {% for data in comment %}
+    <p>
+      <div style="float: left;">
+        <b>{% if not data.userid|int == 0 %}
+            <i class="fa fa-user"></i> {{data.fullname}}
+          {% else %} 
+            <i class="fa fa-user"></i> Anonymous
+          {% endif %}
+        </b> : {{data.comment}}
+      </div> 
+      <p align="right"><i class="fa fa-calendar"> {{data.cmttime}}</i></p>
+    </p>
+
+    {% else %}
+    <p id="noComment">No Comment! Be the first to comment.</p>
+    {% endfor %}
+  </div>
+  <hr>
+  <div class="formContainer">
+    <input type=text id="comment" name="comment" placeholder="Start the discussion...">
+    {% if session.logged_in %}
+    <button type=submit onclick="extractComment(1)" class="btn">Add Comment</button> 
+    {% else %}
+    <button type=submit onclick="extractComment(0)" class="btn">Add Comment</button> 
+    {% endif %}
+  </div>
+  <hr>
+</div>
+{% endblock %}

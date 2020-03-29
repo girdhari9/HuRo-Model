@@ -1,0 +1,16 @@
+{% extends "layout.html" %} {% block header %}
+<title>Profile - {{ websiteName }}</title>
+{% endblock %} {% block content %}
+{% if session.logged_in %}
+<div class="formContainer">
+  <form action="{{ url_for('doEdit') }}" method=post onSubmit="javascript: RemoveDisabled();">
+    Userid:<input type=text  value="{{ profile[0] }}" name=userid id=userid>
+    Username:<input type=text  value="{{ profile[1] }}" name=username id=username>
+    Password:<input type=password  value="{{ profile[2] }}" name=password id=password>
+    Fullname:<input type=text  value="{{ profile[3] }}" name=fullname id=fullname>
+    Email id:<input type=text  value="{{ profile[4] }}" name=emailid id=emailid>
+    Mobile No.:<input type=text  value="{{ profile[5] }}" name=mobile_no id=mobile_no>
+    <input type=submit value="Save Profile" width=100>
+  </form>
+</div>
+{% endif %} {% endblock %}

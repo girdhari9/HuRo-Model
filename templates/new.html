@@ -1,0 +1,47 @@
+{% extends "layout.html" %} {% block header %}
+<title>Add New Content - {{ websiteName }}</title>
+<script type="text/javascript" src="{{ websiteUrl }}/static/tinymce/tinymce.min.js"></script>
+<script type="text/javascript">
+    tinymce.init({
+        selector: "#textarea",
+        plugins : 'advlist autolink link image lists charmap print preview textcolor emoticons directionality fullscreen table wordcount code',
+        toolbar: "undo redo | styleselect | alignleft aligncenter alignright alignjustify ltr rtl | outdent indent blockquote removeformat bullist numlist | forecolor backcolor underline strikethrough italic bold | insertdatetime code emoticons table link image",
+    });
+</script>
+
+{% endblock %} {% block content %} {% if session.logged_in %}
+<div class="formContainer">
+  <form action="{{ url_for('publish') }}" method=post>
+  <div class="styled-select slate">
+    <select name="themeval">
+      <option value="0">Theme (Default)</option>
+      <option value="1">Theme 1</option>
+      <option value="2">Theme 2</option>
+      <option value="3">Theme 3</option>
+    </select>
+  </div>
+  </br>
+  <div class="styled-select slate">
+    <select name="contenttype">
+      <option value="post">Publish Post</option>
+      <option value="page">Publish Page</option>
+    </select>
+  </div>
+  <br>
+  <input type="text" id="comment" name="title" placeholder="Content Title: Some beautiful title here" required> 
+  <input type="text" id="comment" name="url" placeholder="Content Link: insert-it-like-this-way-only" required>
+  <textarea id="textarea" name="content" rows=10 cols=100></textarea>
+  <button type=submit class="btn">Publish</button> 
+  </form>
+</div>
+{% endif %} 
+<div align="center">
+  {% with messages = get_flashed_messages() %}
+         {% if messages %}
+               {% for message in messages %}
+               <h5>{{ message }}</h5>
+               {% endfor %}
+         {% endif %}
+      {% endwith %}
+  </div>
+{% endblock %}

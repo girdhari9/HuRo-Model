@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block header %}
+<title>Login - {{ websiteName }}</title>
+{% endblock %}
+
+{% block content %}
+<h2>Login</h2>
+	<form id="authForm" action="{{ url_for('login') }}" method=post>
+    <div class="container">
+      <div class="input-container">
+        <i class="fa fa-user icon"></i>
+      <input class="input-field" type=text placeholder="Enter Username" name=username>
+      </div>
+      <div class="input-container">
+        <i class="fa fa-key icon"></i>
+      <input class="input-field" type=password placeholder="Enter Password" name=password>
+      </div>
+      <button type="submit" class="btn">Login</button>
+    </div>
+    <div class="container signin">
+      <p>New User? <a href="{{ url_for('doRegister') }}">Sign up</a>.</p>
+    </div>
+	</form>
+  <div align="center">
+  {% with messages = get_flashed_messages() %}
+         {% if messages %}
+               {% for message in messages %}
+               <h5>{{ message }}</h5>
+               {% endfor %}
+         {% endif %}
+      {% endwith %}
+  </div>
+	{% endblock %}
