@@ -28,13 +28,22 @@
     </select>
   </div>
   <br>
-  <input type="text" id="comment" name="title" placeholder="Content Title: Some beautiful title here" required> 
+  <div class="styled-select slate">
+    <select name="posttype" required>
+      <option name="type" value="politics">Politics</option>
+      <option name="type" value="science">Science</option>
+      <option name="type" value="sports">Sports</option>
+      <option name="type" value="entertainment">Entertainment</option>
+    </select>
+  </div>
+  <br>
+  <input type="text" id="comment" name="title" placeholder="Content Title: Some beautiful title here" required>
   <input type="text" id="comment" name="url" placeholder="Content Link: insert-it-like-this-way-only" required>
   <textarea id="textarea" name="content" rows=10 cols=100></textarea>
-  <button type=submit class="btn">Publish</button> 
+  <button type=submit class="btn">Publish</button>
   </form>
 </div>
-{% endif %} 
+{% endif %}
 <div align="center">
   {% with messages = get_flashed_messages() %}
          {% if messages %}
