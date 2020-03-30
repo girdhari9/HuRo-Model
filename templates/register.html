@@ -20,7 +20,7 @@
         else{
             $("#username").attr("disabled", false).css("border","2px solid red");
         }
-      }  
+      }
     });
 }
 </script>
@@ -62,11 +62,11 @@
 
     <button type="submit" class="btn">Register</button>
   </div>
-  
+
   <div class="container signin">
     <p>Already have an account? <a href="{{ url_for('login') }}">Sign in</a>.</p>
   </div>
-</form> 
+</form>
 <div align="center">
 {% with messages = get_flashed_messages() %}
        {% if messages %}
@@ -77,4 +77,3 @@
     {% endwith %}
 </div>
 {% endblock %}
-
