@@ -77,7 +77,7 @@ def getUserDetail(userid):
 
 def getPostsWithAuthor(userid):
   getDetail = g.db.execute('select * from posts where postauthor= ? order by postdate',(userid,))
-  adminPost = [dict(posturl=detail[2], posttitle=detail[1], postdate=detail[6]) for detail in getDetail.fetchall()]
+  adminPost = [dict(posturl=detail[2], posttitle=detail[1], postdate=detail[7], poststatus=detail[6]) for detail in getDetail.fetchall()]
   return adminPost
 
 def getAuthors(userid):
@@ -297,17 +297,6 @@ def login():
       session['userid'] = userDetail[0]
       return redirect(request.url_root)
   return render_template('login.html', pages=get_pages())
-
-@app.route('/profile')
-def getProfile():
-  if session.get('userid'):
-    userid = session['userid']
-  else:
-    abort(404)
-  if session.get('logged_in'):
-    return render_template('profile.html', profile=getUserDetail(userid), pages=get_pages())
-  else:
-    abort(404)
 
 @app.route('/authorlist')
 def getAdminList():
