@@ -6,7 +6,7 @@
 	  <li class="table-header" style="color: white">
 		<div class="col col-2">Status</div>
 	    <div class="col col-2">Title</div>
-	    <div class="col col-3">Modified Date</div>
+	    <div class="col col-2">Modified Date</div>
 	    <div class="col col-1">Blogs</div>
 	  </li>
 	  {% for x in posts %}
@@ -19,7 +19,7 @@
 		{% endif %}
 		</div>
 	    <div class="col col-2" data-label="Blog-Title">{{ x.posttitle}}</div>
-	    <div class="col col-3" data-label="Last-Modified-Date">{{ x.postdate }}</div>
+	    <div class="col col-3" data-label="Last-Modified-Date" align="center">{{ x.postdate }}</div>
 	    <div class="col col-1" data-label="Blog"><a href="/post/{{x.posturl}}">View</a></div>
 	  </li>
 	{% else %}
