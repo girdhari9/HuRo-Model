@@ -41,7 +41,7 @@ def get_posts():
 def getPosts(userid):
   posts = ""
   fetch_posts = g.db.execute('select * from posts where postauthor = ? order by postid desc',(userid,))
-  posts = [dict(postid=x[0], posttitle=x[1], posturl=x[2], postcontent=x[3], postauthor=x[4], postdate=x[6]) for x in fetch_posts.fetchall()]
+  posts = [dict(postid=x[0], posttitle=x[1], posturl=x[2], postcontent=x[3], postauthor=x[4], postdate=x[7], poststatus=x[6]) for x in fetch_posts.fetchall()]
   return posts
 
 def single_post(posturl):
