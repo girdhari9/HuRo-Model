@@ -216,6 +216,15 @@ def archive():
 
   return render_template('archive.html', posts=getPosts(userid), profile=getUserDetail(userid), pages=get_pages())
 
+@app.route('/profile')
+def getProfile():
+  if session.get('logged_in'):
+    userid = session['userid']
+  else:
+    return render_template('home.html', posts=get_posts(), pages=get_pages())
+
+  return render_template('profile.html', profile=getUserDetail(userid), pages=get_pages())
+
 @app.route('/publish', methods=['GET', 'POST'])
 def publish():
   if session.get('logged_in'):

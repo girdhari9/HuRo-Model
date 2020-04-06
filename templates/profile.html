@@ -1,0 +1,12 @@
+{% extends "layout.html" %} {% block header %}
+<title>Archive - {{ websiteName }}</title>
+{% endblock %} {% block content %}
+<div class="card">
+	{% if session.logged_in %}
+	  <h2><i class="fa fa-user"></i> {{ profile[3]}}</h2>
+	  <p class="title"><i class="fa fa-envelope"></i> {{ profile[4] }}</p>
+	  <p><i class="fa fa-mobile"></i> {{ profile[5] }}</p>
+	  <button class="btn"><a class="btn" href="{{ url_for('editPro') }}">Edit Profile</a></button>
+ 	{% endif %}
+</div>
+{% endblock %}
