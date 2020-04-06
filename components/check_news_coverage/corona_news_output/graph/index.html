@@ -15,18 +15,22 @@
 				canvas.fps = 30;
 				g = new Graph(canvas.element, 6);
 				var n = {
-					"nbcnews.com": {radius:12.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,65025,0.50)", strokewidth:6.0},
-					"headtopics.com": {radius:6.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
-					"newsflash.one": {radius:6.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
-					"bbs.wenxuecity.com": {radius:30.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
-					"news.kodoom.com": {radius:12.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
-					"news.yahoo.com": {radius:78.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
-					"flipboard.com": {radius:6.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0}
+					"securityteknews.wordpress.com": {radius:12.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"informazioneconsapevole.com": {radius:6.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"foxnews.com": {radius:54.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(65025,0,0,1.00)", strokewidth:6.0},
+					"redstate.com": {radius:12.0, fill:"rgba(0,0,0,0.20)", stroke:"rgba(65025,0,0,1.00)", strokewidth:6.0},
+					"onenewspage.com": {radius:12.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"foxwilmington.com": {radius:12.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"newsunited.com": {radius:6.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"twitter.com": {radius:12.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"odiariocarioca.com": {radius:54.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"zenith.news": {radius:6.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0}
 				};
 				var e = [
-					["nbcnews.com", "headtopics.com", {length:1002.00}],
-					["newsflash.one", "bbs.wenxuecity.com", {length:1005.00}],
-					["news.kodoom.com", "news.yahoo.com", {length:1013.00}]
+					["securityteknews.wordpress.com", "informazioneconsapevole.com", {length:1002.00}],
+					["foxnews.com", "redstate.com", {length:1009.00, strokewidth:2.00}],
+					["newsunited.com", "twitter.com", {length:1002.00}],
+					["odiariocarioca.com", "zenith.news", {length:1009.00}]
 				];
 				for (var id in n) {
 					g.addNode(id, n[id]);
