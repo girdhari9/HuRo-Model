@@ -26,14 +26,14 @@ create table if not exists users (
   fullname text not null,
   emailid text not null,
   mobile_no text not null,
-  pagedate TIMESTAMP
+  createdate TIMESTAMP
   DEFAULT CURRENT_TIMESTAMP
 );
 
 create table if not exists usersinfo (
   userid integer primary key autoincrement,
   username text not null,
-  pagedate TIMESTAMP
+  userinfodate TIMESTAMP
   DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -42,7 +42,7 @@ create table if not exists comments (
   postid text not null,
   userid text not null,
   comment text not null,
-  pagedate TIMESTAMP
+  commentdate TIMESTAMP
   DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -51,6 +51,28 @@ create table if not exists votes (
   postid integer not null,
   likes integer not null DEFAULT 0,
   dislikes integer not null DEFAULT 0,
-  pagedate TIMESTAMP
+  votesdate TIMESTAMP
+  DEFAULT CURRENT_TIMESTAMP
+);
+
+create table if not exists postpara (
+  postid integer not null,
+  posttag1 text,
+  posttag2 text,
+  posttag3 text,
+  posttag4 text,
+  posttag5 text,
+  postAcc1 real,
+  postAcc2 real,
+  postAcc3 real,
+  modifydate TIMESTAMP
+  DEFAULT CURRENT_TIMESTAMP
+);
+
+create table if not exists usersProfile (
+  userid integer not null,
+  userCred integer DEFAULT 5,
+  userPoints integer DEFAULT 50,
+  modifydate TIMESTAMP
   DEFAULT CURRENT_TIMESTAMP
 );
