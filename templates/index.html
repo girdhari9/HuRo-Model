@@ -3,8 +3,8 @@
 <meta name="description" content="{{ websiteDesc }}">
 {% endblock %} {% block content %}
 <div class="posts-section">
-	{%  for x in posts %}
-	<div class="new-content" style="max-width:1400px">
+	{% for x in posts %}
+	<div class="new-content" style="max-width:1000px">
 		<div class="new-row">
 			<div class="new-col l12 s12">
 		        <div class="new-card-4 new-margin new-white">
@@ -17,16 +17,15 @@
 						{% endif %}
 						<b>{{ x.posttitle }}</b>
 					  </h3>
-					  <h5 align="center"><i class="fa fa-user"></i> {{ x.authorname }} -
+					  <h5 align="center"><i class="fa fa-user"></i> {{ x.authorname }} - 
 						<span class="new-opacity"><i class="fa fa-calendar"></i> {{ x.postdate }}</span>
-						<h5 align="center"><i class="fa fa-user"></i> {{ x.posttype }} -
-						</h5>
+					  </h5>
 				    </div>
 				    <div class="new-container">
 				      <p>{{ x.postcontent|truncate(500)|safe }}</p>
 				      <div class="new-row">
 				        <div class="new-col m12 s12" style="padding-bottom: 10px">
-				          <p align="right"><a class="new-button new-padding-large new-white new-border" href="{{ url_for('show_index') }}post/{{ x.postid }}">READ MORE »</a></p>
+				          <p align="right"><a class="new-button new-padding-large new-white new-border" href="{{ url_for('show_index') }}post/{{ x.posturl }}">READ MORE »</a></p>
 				        </div>
 				      </div>
 				    </div>

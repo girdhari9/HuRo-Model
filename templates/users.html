@@ -12,10 +12,10 @@
       {% for data in profile %}
       {% if data.userid %}
       <li class="table-row">
-        <div class="col col-4" data-label="Job Id">{{ data.fullname}}</div>
-        <div class="col col-2" data-label="Customer Name">{{ data.emailid }}</div>
-        <div class="col col-3" data-label="Amount">{{ data.mobile_no }}</div>
-        <div class="col col-1" data-label="Payment Status"><a href="postlist/{{ data.userid }}">View</a></div>
+        <div class="col col-4" data-label="full Name">{{ data.fullname}}</div>
+        <div class="col col-2" data-label="Email">{{ data.emailid }}</div>
+        <div class="col col-3" data-label="Mobile">{{ data.mobile_no }}</div>
+        <div class="col col-1" data-label="Blog"><a href="postlist/{{ data.userid }}">View</a></div>
       </li>
       {% endif %}
   {% else %}

@@ -33,31 +33,22 @@ def get_pages():
   return pages
 
 def get_posts():
+  posts = ""
   fetch_posts = g.db.execute('select users.fullname, posts.* from posts left join users on users.userid = posts.postauthor order by postid desc')
-  #for x in fetch_posts.fetchall():
-    #  print len(x)
-  posts = [dict(authorname=x[0], postid=x[1], posttitle=x[2], posturl=x[3], postcontent=x[4], postauthor=x[5], posttype=x[6], posttheme=x[7], poststatus=x[8], postdate=x[9]) for x in fetch_posts.fetchall()]
-
-  if session.get('logged_in'):
-    prefs= g.db.execute('select preferences from users where users.userid = ?',(session['userid'],)).fetchone()[0]
-    print prefs
-    if prefs is not '':
-      for post in posts:
-        if prefs.find(post['posttype']) == -1:
-          posts.remove(post)
+  posts = [dict(authorname=x[0], postid=x[1], posttitle=x[2], posturl=x[3], postcontent=x[4], postauthor=x[5], posttheme=x[6], poststatus=x[7], postdate=x[8]) for x in fetch_posts.fetchall()]
   return posts
 
 def getPosts(userid):
   posts = ""
   fetch_posts = g.db.execute('select * from posts where postauthor = ? order by postid desc',(userid,))
-  posts = [dict(postid=x[0], posttitle=x[1], posturl=x[2], postcontent=x[3], postauthor=x[4], posttype=x[5], postdate=x[8]) for x in fetch_posts.fetchall()]
+  posts = [dict(postid=x[0], posttitle=x[1], posturl=x[2], postcontent=x[3], postauthor=x[4], postdate=x[7], poststatus=x[6]) for x in fetch_posts.fetchall()]
   return posts
 
-def single_post(postid):
-  showingpost = g.db.execute('select * from posts where postid = ?', (postid,))
+def single_post(posturl):
+  showingpost = g.db.execute('select * from posts where posturl = ?', (posturl,))
   for x in showingpost.fetchall():
-    postid, posttitle, posturl, postcontent, postauthor, posttype, posttheme, poststatus, postdate = x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], x[8]
-  post = [postid, posttitle, posturl, postcontent, postauthor, posttype, posttheme, poststatus, postdate]
+    postid, posttitle, posturl, postcontent, postauthor, posttheme, poststatus, postdate = x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7]
+  post = [postid, posttitle, posturl, postcontent, postauthor, posttheme, poststatus, postdate]
   return post
 
 def editpost(posturl):
@@ -86,7 +77,7 @@ def getUserDetail(userid):
 
 def getPostsWithAuthor(userid):
   getDetail = g.db.execute('select * from posts where postauthor= ? order by postdate',(userid,))
-  adminPost = [dict(posturl=detail[2], posttitle=detail[1], postdate=detail[6]) for detail in getDetail.fetchall()]
+  adminPost = [dict(posturl=detail[2], posttitle=detail[1], postdate=detail[7], poststatus=detail[6]) for detail in getDetail.fetchall()]
   return adminPost
 
 def getAuthors(userid):
@@ -94,19 +85,19 @@ def getAuthors(userid):
   adminProfile = [dict(userid=detail[0], username=detail[1], password=detail[2], fullname=detail[3], emailid=detail[4], mobile_no=detail[5]) for detail in getDetail.fetchall()]
   return adminProfile
 
-def getPostAuthor(postid):
-  getDetail = g.db.execute('select fullname from users where userid = (select postauthor from posts where postid= ?)',(postid,))
+def getPostAuthor(posturl):
+  getDetail = g.db.execute('select fullname from users where userid = (select postauthor from posts where posturl= ?)',(posturl,))
   for x in getDetail.fetchall():
     fullname = x[0]
   user = [fullname]
   return user
 
-def getCommnet(postid):
+def getCommnet(posturl):
   getDetail = g.db.execute('select users.userid, users.fullname, comments.comment, comments.cmttime \
                             FROM posts \
                             INNER JOIN \
                             (comments INNER JOIN users ON comments.userid = users.userid) ON posts.postid = comments.postid \
-                            WHERE (((posts.postid)= ?))',(postid,))
+                            WHERE (((posts.posturl)= ?))',(posturl,))
   comment = [dict(userid=detail[0],fullname=detail[1], comment=detail[2], cmttime=detail[3]) for detail in getDetail.fetchall()]
   return comment
 
@@ -141,7 +132,7 @@ def checkUrl(posturl):
   getUrl = g.db.execute('select posturl from posts where posturl= ?',(posturl,))
   if not getUrl.fetchone():
     return True
-  return False
+  return False  
 
 def checkAuthorUrl(posturl):
   getId = g.db.execute('select postauthor from posts where posturl= ?',(posturl,))
@@ -149,9 +140,9 @@ def checkAuthorUrl(posturl):
   if session.get('logged_in'):
     if userid[0] == str(session['userid']):
       return True
-    return False
+    return False 
   else:
-    abort(404)
+    abort(404) 
 
 @app.before_request
 def before_request():
@@ -171,9 +162,10 @@ def page_not_found(e):
 def show_index():
   return render_template('index.html', posts=get_posts(), pages=get_pages())
 
-@app.route('/post/<postid>')
-def show_post(postid):
-  return render_template('post.html', post=single_post(postid), user=getPostAuthor(postid), comment=getCommnet(postid),  pages=get_pages(), votes=getLikesDislikes(postid))
+@app.route('/post/<posturl>')
+def show_post(posturl):
+  postid = getPostid(posturl)
+  return render_template('post.html', post=single_post(posturl), user=getPostAuthor(posturl), comment=getCommnet(posturl),  pages=get_pages(), votes=getLikesDislikes(postid))
 
 @app.route('/post/<posturl>/edit')
 def postedit(posturl):
@@ -224,6 +216,15 @@ def archive():
 
   return render_template('archive.html', posts=getPosts(userid), profile=getUserDetail(userid), pages=get_pages())
 
+@app.route('/profile')
+def getProfile():
+  if session.get('logged_in'):
+    userid = session['userid']
+  else:
+    return render_template('home.html', posts=get_posts(), pages=get_pages())
+
+  return render_template('profile.html', profile=getUserDetail(userid), pages=get_pages())
+
 @app.route('/publish', methods=['GET', 'POST'])
 def publish():
   if session.get('logged_in'):
@@ -232,8 +233,8 @@ def publish():
         flash('Give different Content Link!')
         return redirect(request.url)
       if request.form['contenttype'] == "post":
-        g.db.execute('insert into posts (posttitle, posturl, postcontent, postauthor, posttype, posttheme) values (?, ?, ?, ?, ?, ?)',
-                     (request.form['title'], request.form['url'], request.form['content'], session['userid'], request.form['posttype'], request.form['themeval']))
+        g.db.execute('insert into posts (posttitle, posturl, postcontent, postauthor, posttheme) values (?, ?, ?, ?, ?)',
+                     (request.form['title'], request.form['url'], request.form['content'], session['userid'], request.form['themeval']))
         g.db.commit()
         return redirect(request.url_root)
       else:
@@ -294,28 +295,17 @@ def login():
       return redirect(request.url)
 
     userid, username, password, mobile_no  = userData[0], userData[1], userData[2], userData[3]
-    userDetail = [userid, username, password, mobile_no]
+    userDetail = [userid, username, password, mobile_no] 
 
     if userDetail[2] != request.form['password']:
       flash('Invalid Password!')
-      return redirect(request.url)
+      return redirect(request.url) 
     else:
       session['logged_in'] = True
       session['username'] = request.form['username']
       session['userid'] = userDetail[0]
       return redirect(request.url_root)
   return render_template('login.html', pages=get_pages())
-
-@app.route('/profile')
-def getProfile():
-  if session.get('userid'):
-    userid = session['userid']
-  else:
-    abort(404)
-  if session.get('logged_in'):
-    return render_template('profile.html', profile=getUserDetail(userid), pages=get_pages())
-  else:
-    abort(404)
 
 @app.route('/authorlist')
 def getAdminList():
@@ -356,25 +346,9 @@ def doRegister():
   if session.get('logged_in'):
     return redirect(request.url_root)
   if request.method == 'POST':
-    print request.values.getlist('posttype')
-    preferences_string=""
-    pref1= request.form.get('politics')
-    if pref1 is not None:
-        preferences_string+="politics,"
-    pref2= request.form.get('science')
-    if pref2 is not None:
-        preferences_string+="science,"
-    pref3= request.form.get('sports')
-    if pref3 is not None:
-        preferences_string+="sports,"
-    pref4= request.form.get('entertainment')
-    if pref4 is not None:
-        preferences_string+="entertainment,"
-    preferences_string=preferences_string[:-1]
-
     if request.form['password'] == request.form['confirmPassword']:
-      g.db.execute('insert into users (username, password, fullname, emailid, mobile_no, preferences) values (?, ?, ?, ?, ?, ?)',
-                   (request.form['username'], request.form['password'], request.form['fullname'], request.form['emailid'], request.form['mobile_no'], preferences_string))
+      g.db.execute('insert into users (username, password, fullname, emailid, mobile_no) values (?, ?, ?, ?, ?)',
+                   (request.form['username'], request.form['password'], request.form['fullname'], request.form['emailid'], request.form['mobile_no']))
       g.db.commit()
       flash('You have registered successfully!')
       return redirect(request.url)

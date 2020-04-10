@@ -20,7 +20,7 @@
         else{
             $("#username").attr("disabled", false).css("border","2px solid red");
         }
-      }
+      }  
     });
 }
 </script>
@@ -57,33 +57,16 @@
       <i class="fa fa-key icon"></i>
       <input class="input-field" type="password" placeholder="Repeat Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" name="confirmPassword">
     </div>
-
-    <div class="input-container" data-tip="Select one or many types of content you'd like to see in your feed.">
-        <div class="checkbox">
-          <label><input type="checkbox" value="politics">Politics</label>
-        </div>
-        <div class="checkbox">
-          <label><input type="checkbox" value="science">Science</label>
-        </div>
-        <div class="checkbox">
-          <label><input type="checkbox" value="sports">Sports</label>
-        </div>
-        <div class="checkbox">
-          <label><input type="checkbox" value="entertainment">Entertainment</label>
-        </div>
-    </div>
-
-
     <hr>
     <p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
 
     <button type="submit" class="btn">Register</button>
   </div>
-
+  
   <div class="container signin">
     <p>Already have an account? <a href="{{ url_for('login') }}">Sign in</a>.</p>
   </div>
-</form>
+</form> 
 <div align="center">
 {% with messages = get_flashed_messages() %}
        {% if messages %}
@@ -94,3 +77,4 @@
     {% endwith %}
 </div>
 {% endblock %}
+
