@@ -3,6 +3,7 @@ from pattern.web import Google, SEARCH
 from pattern.db import Datasheet
 from pattern.db  import pd
 from collections import defaultdict
+import os
 import csv
 import string
 import collections
@@ -126,10 +127,18 @@ class SourceChecker(object):
 
 	def render_output(self, domains,save_path):
 		"""renders text output"""
-		file1 = open(save_path/+"output.txt","a")
+		filename=save_path+"output.txt"
+		if not os.path.exists(os.path.dirname(filename)):
+			try:
+				os.makedirs(os.path.dirname(filename))
+			except OSError as exc: # Guard against race condition
+				if exc.errno != errno.EEXIST:
+					raise
+		file1 = open(filename,"w+")
 		output = defaultdict(list)
-		print domains
-		file1.write(domains)
+		# print domains
+		for i in domains:
+			file1.write(str(i))
 		for d,v in domains.items():
 			d_cats = [c for c in self.cat_dict[d] if len(c)>0 and len(c.split(' '))<3]
 			overlap = float(len(v))/self.max_queries
@@ -140,21 +149,23 @@ class SourceChecker(object):
 			elif overlap >= 0.6:
 				output['HIGH'].append((d, d_cats))
 		degrees = ['HIGH', 'SOME', 'MINIMAL']
-		print '\n'
+		# print '\n'
+		file1.write('\n')
 		for deg in degrees:
 			if output[deg]:
 
-				print '%s OVERLAP: ' % deg
+				# print '%s OVERLAP: ' % deg
 				file1.write('%s OVERLAP: ' % deg)
 				for d, cats in sorted(output[deg]):
 					if cats:
 						file1.write(d + ': ' + ','.join(cats))
-						print d + ': ' + ','.join(cats)
+						# print d + ': ' + ','.join(cats)
 					else:
 						file1.write(d)
-						print d
+						# print d
 				file1.write('\n')
-				print '\n'
+				# print '\n'
+		file1.close()
 
 	def render_graph(self, domains,save_path):
 		"""renders graph output"""
@@ -191,20 +202,21 @@ class SourceChecker(object):
 				max_rad = max(len(domains[x]), len(domains[y]))+1000
 				g.add_edge(x, y, length = max_rad, strokewidth = intersection)
 
-		path = 'graph'
+		path = save_path+'graph'
 		g.export(path, encoding='utf-8', distance = 6, directed = False, width = 1400, height = 900)
 
 
 def launch(save_path):
+	## print(save_path,' is past fpr current news')
 	file1 = open("input.txt","r")
 	text = file1.read()
-	print text
+	#print text
 	language = 'english'
 	sc = SourceChecker(text, language)
 	queries = sc.get_queries()
 	domains = sc.get_urls(queries)
 	sc.load_domains()
-	print 'output'
+	#print 'output'
 	sc.render_output(domains,save_path)
-	print 'graphs'
+	#print 'graphs'
 	sc.render_graph(domains,save_path)

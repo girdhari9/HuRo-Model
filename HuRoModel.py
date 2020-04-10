@@ -5,6 +5,10 @@ from flask import Flask, request, session, g, redirect, url_for, abort, render_t
 from contextlib import closing
 from werkzeug.contrib.atom import AtomFeed
 from urlparse import urljoin
+import check_news_coverage
+import thread
+import webbrowser
+
 # Creating the application.
 app = Flask(__name__)
 app.config.from_object("config")
@@ -132,7 +136,7 @@ def checkUrl(posturl):
   getUrl = g.db.execute('select posturl from posts where posturl= ?',(posturl,))
   if not getUrl.fetchone():
     return True
-  return False  
+  return False
 
 def checkAuthorUrl(posturl):
   getId = g.db.execute('select postauthor from posts where posturl= ?',(posturl,))
@@ -140,9 +144,9 @@ def checkAuthorUrl(posturl):
   if session.get('logged_in'):
     if userid[0] == str(session['userid']):
       return True
-    return False 
+    return False
   else:
-    abort(404) 
+    abort(404)
 
 @app.before_request
 def before_request():
@@ -225,6 +229,12 @@ def getProfile():
 
   return render_template('profile.html', profile=getUserDetail(userid), pages=get_pages())
 
+@app.route('/redirect_analysis/<postid>')
+def get_analysis(postid):
+    datapath="posts/"+str(postid)+"/graph/index.html"
+    webbrowser.open_new_tab(datapath)
+    return render_template('index.html',posts=get_posts(),pages=get_pages())
+
 @app.route('/publish', methods=['GET', 'POST'])
 def publish():
   if session.get('logged_in'):
@@ -233,9 +243,19 @@ def publish():
         flash('Give different Content Link!')
         return redirect(request.url)
       if request.form['contenttype'] == "post":
+        themev=0
+        #print 'executing query...............................'
         g.db.execute('insert into posts (posttitle, posturl, postcontent, postauthor, posttheme) values (?, ?, ?, ?, ?)',
-                     (request.form['title'], request.form['url'], request.form['content'], session['userid'], request.form['themeval']))
+                     (request.form['title'], request.form['url'], request.form['content'], session['userid'], themev))
         g.db.commit()
+        post_id=g.db.execute('select max(postid) from posts ').fetchone()[0]
+        file1 = open("input.txt","w+")
+        file1.write(request.form['content'])
+        file1.close()
+        par="posts/"+str(post_id)+"/"
+        thread.start_new_thread(check_news_coverage.launch,(par,))
+
+        #print post_id
         return redirect(request.url_root)
       else:
         g.db.execute('insert into pages (pagetitle, pageurl, pagecontent, pageauthor) values (?, ?, ?, ?)',
@@ -295,11 +315,11 @@ def login():
       return redirect(request.url)
 
     userid, username, password, mobile_no  = userData[0], userData[1], userData[2], userData[3]
-    userDetail = [userid, username, password, mobile_no] 
+    userDetail = [userid, username, password, mobile_no]
 
     if userDetail[2] != request.form['password']:
       flash('Invalid Password!')
-      return redirect(request.url) 
+      return redirect(request.url)
     else:
       session['logged_in'] = True
       session['username'] = request.form['username']

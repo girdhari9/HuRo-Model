@@ -1,0 +1,4 @@
+edition.cnn.comamp.flipboard.comcovid19data.comapa.azthehill.comstarofmysore.comdailymail.co.ukonlineradio.com.ngfacebook.comearlytimesnews.comblog.kinaforum.comeastcountymagazine.orgmb.ntd.comtravelnewseastafrica.comcnn.comfr24news.comcitizentv.co.kepresstories.comm.facebook.comskyscrapercity.companorama.amakipress.comtwitter.comdaily-bangladesh.com
+HIGH OVERLAP: onlineradio.com.ng
+SOME OVERLAP: blog.kinaforum.comcnn.com: left_centercovid19data.comeastcountymagazine.orgedition.cnn.comfacebook.comthehill.com: left_center
+MINIMAL OVERLAP: akipress.comamp.flipboard.comapa.azcitizentv.co.kedaily-bangladesh.comdailymail.co.ukearlytimesnews.comfr24news.comm.facebook.commb.ntd.companorama.ampresstories.comskyscrapercity.comstarofmysore.comtravelnewseastafrica.comtwitter.com

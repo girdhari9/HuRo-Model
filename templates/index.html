@@ -17,11 +17,13 @@
 						{% endif %}
 						<b>{{ x.posttitle }}</b>
 					  </h3>
-					  <h5 align="center"><i class="fa fa-user"></i> {{ x.authorname }} - 
+					  <h5 align="center"><i class="fa fa-user"></i> {{ x.authorname }} -
 						<span class="new-opacity"><i class="fa fa-calendar"></i> {{ x.postdate }}</span>
 					  </h5>
 				    </div>
+						{% set pid=x.postid %}
 				    <div class="new-container">
+							<a href="{{ url_for('get_analysis',postid=x.postid)}}">View News Coverage</a>
 				      <p>{{ x.postcontent|truncate(500)|safe }}</p>
 				      <div class="new-row">
 				        <div class="new-col m12 s12" style="padding-bottom: 10px">

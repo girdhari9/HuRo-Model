@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+	<title>Graph</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="style.css" type="text/css" media="screen" />
+	<script type="text/javascript" src="canvas.js"></script>
+	<script type="text/javascript" src="graph.js"></script>
+</head>
+<body>
+	<div id="graph" style="width:1400px; height:900px;">
+		<script type="text/canvas">
+			function setup(canvas) {
+				canvas.size(1400, 900);
+				canvas.fps = 30;
+				g = new Graph(canvas.element, 6);
+				var n = {
+					"edition.cnn.com": {radius:30.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"amp.flipboard.com": {radius:12.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"covid19data.com": {radius:30.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"apa.az": {radius:12.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"thehill.com": {radius:24.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,65025,0.50)", strokewidth:6.0},
+					"starofmysore.com": {radius:6.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"dailymail.co.uk": {radius:6.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"onlineradio.com.ng": {radius:36.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"facebook.com": {radius:30.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"earlytimesnews.com": {radius:12.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"blog.kinaforum.com": {radius:18.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"eastcountymagazine.org": {radius:18.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"mb.ntd.com": {radius:6.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"travelnewseastafrica.com": {radius:12.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"cnn.com": {radius:18.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,65025,0.50)", strokewidth:6.0},
+					"fr24news.com": {radius:6.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"citizentv.co.ke": {radius:6.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"presstories.com": {radius:6.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"m.facebook.com": {radius:6.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"skyscrapercity.com": {radius:6.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"panorama.am": {radius:12.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"akipress.com": {radius:12.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"twitter.com": {radius:12.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0},
+					"daily-bangladesh.com": {radius:6.0, fill:"rgba(32640,32640,0,0.10)", stroke:"rgba(0,0,0,0.50)", strokewidth:6.0}
+				};
+				var e = [
+					["edition.cnn.com", "amp.flipboard.com", {length:1005.00}],
+					["facebook.com", "earlytimesnews.com", {length:1005.00}],
+					["blog.kinaforum.com", "eastcountymagazine.org", {length:1003.00, strokewidth:2.00}],
+					["citizentv.co.ke", "presstories.com", {length:1001.00}],
+					["panorama.am", "akipress.com", {length:1002.00, strokewidth:2.00}],
+					["twitter.com", "daily-bangladesh.com", {length:1002.00}]
+				];
+				for (var id in n) {
+					g.addNode(id, n[id]);
+				}
+				for (var i=0; i < e.length; i++) {
+					var n1 = g.nodeset[e[i][0]];
+					var n2 = g.nodeset[e[i][1]];
+					g.addEdge(n1, n2, e[i][2]);
+				}
+				g.layout.k = 4.0; // Force constant (= edge length).
+				g.layout.force = 0.01; // Repulsive strength.
+				g.layout.repulsion = 50; // Repulsive radius.
+				g.eigenvectorCentrality();
+				g.betweennessCentrality();
+				g.degreeCentrality();
+				// Apply Node.weight to Node.radius.
+				for (var i=0; i < g.nodes.length; i++) {
+					var n = g.nodes[i];
+					n.radius = n.radius + n.radius * n.weight;
+				}
+				// Apply Edge.length (leaves get shorter edges).
+				for (var i=0; i < g.nodes.length; i++) {
+					var e = g.nodes[i].edges();
+					if (e.length == 1) {
+						e[0].length *= 0.2;
+					}
+				}
+			}
+			function draw(canvas) {
+				if (g.layout.iterations <= 500) {
+					canvas.clear();
+					//shadow();
+					stroke(0);
+					fill(0,0);
+					g.update(2);
+					g.draw(false, false);
+				}
+				g.drag(canvas.mouse);
+			}
+		</script>
+	</div>
+</body>
+</html>
