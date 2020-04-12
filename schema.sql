@@ -55,7 +55,7 @@ create table if not exists votes (
   DEFAULT CURRENT_TIMESTAMP
 );
 
-create table if not exists postpara (
+create table if not exists postspara (
   postid integer not null,
   posttag1 text,
   posttag2 text,

@@ -1,12 +1,31 @@
 {% extends "layout.html" %} {% block header %}
 <title>Archive - {{ websiteName }}</title>
 {% endblock %} {% block content %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style1.css') }}">
 <div class="card">
 	{% if session.logged_in %}
-	  <h2><i class="fa fa-user"></i> {{ profile[3]}}</h2>
-	  <p class="title"><i class="fa fa-envelope"></i> {{ profile[4] }}</p>
-	  <p><i class="fa fa-mobile"></i> {{ profile[5] }}</p>
-	  <button class="btn"><a class="btn" href="{{ url_for('editPro') }}">Edit Profile</a></button>
+	<div class="active-card card-yellow">
+		<div class="fab-cards-card">
+		  <div class="fab-card"></div>
+		  <i class="avatar-card zmdi zmdi-account"></i>
+		</div>
+		<div class="user">
+		  <div class="social-cards-card">
+			<div class="social-card"><i class="zmdi zmdi-twitter"></i></div>
+			<div class="social-card"><i class="zmdi zmdi-github"></i></div>
+			<div class="social-card"><i class="zmdi zmdi-google-plus"></i></div>
+			<div class="social-card"><i class="zmdi zmdi-codepen"></i></div>
+		  </div>
+		  <div class="profile-cards-card">
+			<div class="profile-card"><span>{{data[0][0]}}</span>Upvoted</div>
+			<div class="profile-card"><span>{{userRepo[0]}}</span>Credibility</div>
+			<div class="profile-card"><span>{{data[1][0]}}</span>Downvoted</div>
+			<div class="profile-card"><span>{{userRepo[1]}}</span>Points</div>
+			<div class="profile-card"><span>2</span>Followers</div>
+			<div class="profile-card"><span>5</span>Following</div>
+		  </div>
+		</div>
+	</div>
  	{% endif %}
 </div>
 <div class="container">

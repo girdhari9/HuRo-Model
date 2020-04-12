@@ -81,8 +81,10 @@ def getPostsWithAuthor(userid):
   return adminPost
 
 def getAuthors(userid):
-  getDetail = g.db.execute('select * from users where not userid = ?',(userid,))
-  adminProfile = [dict(userid=detail[0], username=detail[1], password=detail[2], fullname=detail[3], emailid=detail[4], mobile_no=detail[5]) for detail in getDetail.fetchall()]
+  getDetail = g.db.execute('select users.*, usersProfile.*  \
+                            from users, usersProfile where not users.userid = ?  \
+                            AND users.userid = usersProfile.userid',(userid,))
+  adminProfile = [dict(userid=detail[0], fullname=detail[3], emailid=detail[4], mobile_no=detail[5], user_cred=detail[8]) for detail in getDetail.fetchall()]
   return adminProfile
 
 def getPostAuthor(posturl):
@@ -133,6 +135,15 @@ def checkUrl(posturl):
   if not getUrl.fetchone():
     return True
   return False  
+
+def getUserData(userid):
+  getLikes = (g.db.execute('select count(*) from votes where userid= ? and likes = ?',(userid, 1,))).fetchone()
+  getDislikes = (g.db.execute('select count(*) from votes where userid= ? and dislikes = ?',(userid, 1,))).fetchone()
+  return getLikes, getDislikes
+
+def getUserRepo(userid):
+  userRepo = (g.db.execute('select userCred, userPoints from usersProfile where userid= ?',(userid,))).fetchone()
+  return userRepo
 
 def checkAuthorUrl(posturl):
   getId = g.db.execute('select postauthor from posts where posturl= ?',(posturl,))
@@ -214,16 +225,16 @@ def archive():
   else:
     return render_template('archive.html', posts=get_posts(), pages=get_pages())
 
-  return render_template('archive.html', posts=getPosts(userid), profile=getUserDetail(userid), pages=get_pages())
+  return render_template('archive.html', posts=getPosts(userid), userRepo=getUserRepo(userid), data=getUserData(userid), pages=get_pages())
 
 @app.route('/profile')
 def getProfile():
   if session.get('logged_in'):
     userid = session['userid']
   else:
-    return render_template('home.html', posts=get_posts(), pages=get_pages())
+    return render_template('index.html', posts=get_posts(), pages=get_pages())
 
-  return render_template('profile.html', profile=getUserDetail(userid), pages=get_pages())
+  return render_template('profile.html', profile=getUserDetail(userid), pages=get_pages(), data=getUserData(userid), userRepo=getUserRepo(userid))
 
 @app.route('/publish', methods=['GET', 'POST'])
 def publish():

@@ -16,6 +16,7 @@ body {
   font-family: 'Lato';
   font-weight: 400;
   transition-duration: 0.5s ease;
+  text-align: center;
 }
 nav {
   margin-right: auto;
@@ -519,47 +520,5 @@ tr:hover {background-color:#f5f5f5;}
 .slate   { background-color: #ddd; }
 .slate select   { color: #000; }
 
-/* Like Dislike button css */
-.like-outer{
-  width: 250px;
-  float: left;
-}
-.like-area{
-  width:100%;
-  float: left;
-}
-.like-area ul{
-  list-style: none;
-  margin: 0px
-}
-.like-area ul li{
-  display: inline-block;
-  margin: 0px 5px 0px 0px;
-}
-.like-area ul li a{
-  width: 100%;
-  padding: 10px;
-  font-size: 25px;
-  color: #000;
-  cursor: pointer;
-  float: left;
-  -webkit-user-select: none; /* Safari */      
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE10+/Edge */
-  user-select: none; /* Standard */
-}
-.like-no{
-  font-size: 20px;
-}
-.like-area i{
-  float: left;
-}
-.like-area .fas{
-  font-size: 0px;
-}
-.like-active .fas{
- font-size: 25px;
-}
-.like-active .far{
- font-size: 0px;
-}
+
+

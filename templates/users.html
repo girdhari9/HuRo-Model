@@ -7,6 +7,7 @@
         <div class="col col-4">Author's Name</div>
         <div class="col col-2">Email Id</div>
         <div class="col col-3">Mobile No</div>
+        <div class="col col-4">Credibility</div>
         <div class="col col-1">Blogs</div>
       </li>
       {% for data in profile %}
@@ -15,6 +16,7 @@
         <div class="col col-4" data-label="full Name">{{ data.fullname}}</div>
         <div class="col col-2" data-label="Email">{{ data.emailid }}</div>
         <div class="col col-3" data-label="Mobile">{{ data.mobile_no }}</div>
+        <div class="col col-3" data-label="Mobile">{{ data.user_cred }}</div>
         <div class="col col-1" data-label="Blog"><a href="postlist/{{ data.userid }}">View</a></div>
       </li>
       {% endif %}
