@@ -245,7 +245,7 @@ def publish():
         return redirect(request.url)
       if request.form['contenttype'] == "post":
         g.db.execute('insert into posts (posttitle, posturl, postcontent, postauthor, posttheme) values (?, ?, ?, ?, ?)',
-                     (request.form['title'], request.form['url'], request.form['content'], session['userid'], request.form['themeval']))
+                     (request.form['title'], request.form['url'], request.form['content'], session['userid'], 1))
         g.db.commit()
         return redirect(request.url_root)
       else:

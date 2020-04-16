@@ -99,7 +99,7 @@ if (sure == true) {
               </h3>
               <h5 align="center"><b><i class="fa fa-user"></i> </b>{{ user[0] }} - <span class="new-opacity"><b><i class="fa fa-calendar"></i></b> {{ post[7] }}</span></h5>
             </div>
-            <div class="new-container">
+            <div class="new-container" align = "Justify">
               <p>{{ post[3]|safe }}</p>
               <div class="new-row">
               </div>
@@ -109,7 +109,7 @@ if (sure == true) {
     </div>
   </div>
 
-<div class="post-footer">
+<div class="post-footer" align = "left">
   <p>
      {% if session.logged_in and session['userid'] == post[4]|int %}
        <a class="button" href="{{ url_for('postedit', posturl=post[2]) }}"><i class="fa fa-edit"></i> Edit</a>
@@ -117,7 +117,7 @@ if (sure == true) {
         <a class="button" onclick="checkIfSure()"><i class="fa fa-times"></i> Delete</a>
      {% endif %}</p>
 </div>
-<div>
+<div align = "left">
   <p id="totalCmt"><b><i class="fa fa-comments"></i> {{ comment|length }} Comments</b></p>
   <p>
     {% if session.logged_in %}

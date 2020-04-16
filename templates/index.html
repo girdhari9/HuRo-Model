@@ -21,8 +21,8 @@
 						<span class="new-opacity"><i class="fa fa-calendar"></i> {{ x.postdate }}</span>
 					  </h5>
 				    </div>
-				    <div class="new-container">
-				      <p>{{ x.postcontent|truncate(500)|safe }}</p>
+				    <div class="new-container" align="justify">
+				      <p>{{ x.postcontent|truncate(1000)|safe }}</p>
 				      <div class="new-row">
 				        <div class="new-col m12 s12" style="padding-bottom: 10px">
 				          <p align="right"><a class="new-button new-padding-large new-white new-border" href="{{ url_for('show_index') }}post/{{ x.posturl }}">READ MORE »</a></p>
